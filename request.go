@@ -9,12 +9,12 @@ import (
 )
 
 type RequestBody struct {
-	AppId string
-	Method string
-	Date string
+	AppId     string
+	Method    string
+	Date      string
 	AppSecret string
-	Sign string
-	Param map[string]string
+	Sign      string
+	Param     map[string]string
 }
 
 func (r RequestBody) GenerateSign() string {
@@ -22,15 +22,15 @@ func (r RequestBody) GenerateSign() string {
 		return ""
 	}
 	param := make(map[string]string)
-	for k,v :=range r.Param {
+	for k, v := range r.Param {
 		param[k] = v
 	}
 	param["app_id"] = r.AppId
 	param["method"] = r.Method
 	param["date"] = r.Date
-	arr := make([]string,0)
-	for k:=range param {
-		arr = append(arr,k)
+	arr := make([]string, 0)
+	for k := range param {
+		arr = append(arr, k)
 	}
 	sort.Strings(arr)
 	var builder strings.Builder
@@ -43,13 +43,9 @@ func (r RequestBody) GenerateSign() string {
 	hasher := md5.New()
 	hasher.Write([]byte(builder.String()))
 	param["sign"] = strings.ToUpper(hex.EncodeToString(hasher.Sum(nil)))
-	b,err := json.Marshal(param)
-	if err !=nil {
+	b, err := json.Marshal(param)
+	if err != nil {
 		return ""
 	}
 	return string(b)
-}
-
-func Tmp() {
-
 }
