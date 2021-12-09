@@ -117,6 +117,7 @@ type rpJson struct {
 
 func defaultHttp(w http.ResponseWriter, r *http.Request) {
 	path, httpMethod := r.URL.Path, r.Method
+	var err error
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 	rp := rpJson{
 		Code: 500,
@@ -138,7 +139,8 @@ func defaultHttp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	taoword := r.URL.Query().Get("taoword")
-	if taoword == "" {
+	taoword, err = url.QueryUnescape(taoword)
+	if taoword == "" || err != nil {
 		rp.Msg = "请求参数有误"
 		rp.Code = 1001
 		b1, _ := json.Marshal(rp)
